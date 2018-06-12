@@ -4,7 +4,8 @@
   "description": "A Reaction plugin that allows you to process payments using Authorize.net",
   "main": "register.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "lintfix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
