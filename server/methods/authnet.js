@@ -2,16 +2,22 @@
 /* eslint quote-props: 0 */
 // meteor modules
 import accounting from "accounting-js";
+import AuthNetAPI from "authorize-net";
 import { Meteor } from "meteor/meteor";
 import { check, Match } from "meteor/check";
 import { Promise } from "meteor/promise";
-
-import AuthNetAPI from "authorize-net";
 import { Reaction, Logger } from "/server/api";
 import { Packages } from "/lib/collections";
 import { ValidCardNumber, ValidExpireMonth, ValidExpireYear, ValidCVV } from "/lib/api";
 import { PaymentMethodArgument } from "/lib/collections/schemas";
 
+/**
+ * @name getAccountOptions
+ * @method
+ * @summary Get configuration options from the db
+ * @param {Boolean} isPayment -
+ * @returns {Object} - return object with api_id and transaction_key
+ */
 function getAccountOptions(isPayment) {
   const queryConditions = {
     name: "reaction-auth-net",
@@ -35,13 +41,22 @@ function getAccountOptions(isPayment) {
   return options;
 }
 
+/**
+ * @name getSettings
+ * @method
+ * @summary Get elements from settings object
+ * @param {Object} settings Object
+ * @param {String} ref - the object to extract
+ * @param {String} valueName - key
+ * @returns {String} value from settings object
+ */
 function getSettings(settings, ref, valueName) {
   if (settings !== null) {
     return settings[valueName];
   } else if (ref !== null) {
     return ref[valueName];
   }
-  return undefined;
+  return ""; // still qualifies as false
 }
 
 Meteor.methods({
@@ -187,6 +202,13 @@ Meteor.methods({
   }
 });
 
+/**
+ * @name getAuthnetService
+ * @method
+ * @summary Get a configured instance of the Authnet API
+ * @param {Object} accountOptions - Options to pass to the API
+ * @returns {Object} - configured instance of Authnet API
+ */
 function getAuthnetService(accountOptions) {
   const {
     login,
@@ -201,6 +223,15 @@ function getAuthnetService(accountOptions) {
   });
 }
 
+/**
+ * @name priorAuthCaptureTransaction
+ * @method
+ * @summary Perform a capture operation
+ * @param {String} transId - Transaction ID
+ * @param {Number} amount - Amount to capture
+ * @param {Object} service - Service
+ * @returns {Object} - configured instance of Authnet API
+ */
 function priorAuthCaptureTransaction(transId, amount, service) {
   const body = {
     transactionType: "priorAuthCaptureTransaction",
@@ -212,6 +243,14 @@ function priorAuthCaptureTransaction(transId, amount, service) {
   return Promise.await(transactionRequest);
 }
 
+/**
+ * @name voidTransaction
+ * @method
+ * @summary Perform a void on an existing transaction
+ * @param {String} transId - Transaction ID
+ * @param {Object} service - Service
+ * @returns {Object} - configured instance of Authnet API
+ */
 function voidTransaction(transId, service) {
   const body = {
     transactionType: "voidTransaction",
