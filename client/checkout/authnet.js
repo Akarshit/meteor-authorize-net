@@ -14,6 +14,14 @@ import "./authnet.html";
 // used to track asynchronous submitting for UI changes
 let submitting = false;
 
+/**
+ * @name uiEnd
+ * @method
+ * @summary Show results in the form
+ * @param  {Template} tpl - an instance of the template
+ * @param {String} buttonText - Text to display on the button
+ * @returns {undefined} - returns nothing
+ */
 function uiEnd(tpl, buttonText) {
   tpl.$(":input").removeAttr("disabled");
   tpl.$("#btn-complete-order").text(buttonText);
@@ -21,14 +29,34 @@ function uiEnd(tpl, buttonText) {
   submitting = false;
 }
 
+/**
+ * @name paymentAlert
+ * @method
+ * @summary Display error messages in the form
+ * @param  {String} errorMessage - error message
+ * @returns {Object} - jQuery object
+ */
 function paymentAlert(errorMessage) {
   return $(".alert").removeClass("hidden").text(errorMessage);
 }
 
+/**
+ * @name hidePaymentAlert
+ * @method
+ * @summary hide errors
+ * @returns {undefined} - returns nothing
+ */
 function hidePaymentAlert() {
   $(".alert").addClass("hidden").text("");
 }
 
+/**
+ * @name handleAuthNetSubmitError
+ * @method
+ * @summary Log any errors from API
+ * @param  {String} error - error message
+ * @returns {undefined} - returns nothing
+ */
 function handleAuthNetSubmitError(error) {
   // TODO - this error handling needs to be reworked for the Authorize.net API
   paymentAlert(error);
