@@ -35,6 +35,39 @@
     "eslint-plugin-promise": "3.8.0",
     "eslint-plugin-react": "7.8.2"
   },
+  "babel": {
+    "plugins": [
+      [
+        "lodash",
+        {
+          "id": [
+            "lodash",
+            "recompose"
+          ]
+        }
+      ],
+      [
+        "module-resolver",
+        {
+          "root": [
+            "./"
+          ],
+          "alias": {
+            "@reactioncommerce/reaction-collections": "./imports/plugins/core/collections",
+            "@reactioncommerce/reaction-components": "./imports/plugins/core/components/lib",
+            "@reactioncommerce/reaction-router": "./imports/plugins/core/router/lib",
+            "@reactioncommerce/reaction-ui": "./imports/plugins/core/ui/client/components",
+            "underscore": "lodash"
+          }
+        }
+      ]
+    ],
+    "presets": [
+      "env",
+      "react",
+      "stage-2"
+    ]
+  },
   "eslintConfig": {
     "extends": "@reactioncommerce",
     "globals": {
